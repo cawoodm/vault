@@ -7,6 +7,7 @@ scenario "upgrade" {
     artifact_source = ["local", "crt", "artifactory"]
     artifact_type   = ["bundle", "package"]
     backend         = ["consul", "raft"]
+    consul_edition  = ["ce", "ent"]
     consul_version  = ["1.14.9", "1.15.5", "1.16.1"]
     distro          = ["ubuntu", "rhel"]
     edition         = ["ce", "ent", "ent.fips1402", "ent.hsm", "ent.hsm.fips1402"]
@@ -59,6 +60,11 @@ scenario "upgrade" {
     module    = module.get_local_metadata
   }
 
+  step "get_local_metadata" {
+    skip_step = matrix.artifact_source != "local"
+    module    = module.get_local_metadata
+  }
+
   # This step gets/builds the upgrade artifact that we will upgrade to
   step "build_vault" {
     module = "build_${matrix.artifact_source}"
@@ -96,7 +102,7 @@ scenario "upgrade" {
   // This step reads the contents of the backend license if we're using a Consul backend and
   // the edition is "ent".
   step "read_backend_license" {
-    skip_step = matrix.backend == "raft" || var.backend_edition == "ce"
+    skip_step = matrix.backend == "raft" || matrix.consul_edition == "ce"
     module    = module.read_license
 
     variables {
@@ -160,9 +166,9 @@ scenario "upgrade" {
     variables {
       cluster_name    = step.create_vault_cluster_backend_targets.cluster_name
       cluster_tag_key = global.backend_tag_key
-      license         = (matrix.backend == "consul" && var.backend_edition == "ent") ? step.read_backend_license.license : null
+      license         = (matrix.backend == "consul" && matrix.consul_edition == "ent") ? step.read_backend_license.license : null
       release = {
-        edition = var.backend_edition
+        edition = matrix.consul_edition
         version = matrix.consul_version
       }
       target_hosts = step.create_vault_cluster_backend_targets.hosts
@@ -185,10 +191,10 @@ scenario "upgrade" {
       awskms_unseal_key_arn   = step.create_vpc.kms_key_arn
       backend_cluster_name    = step.create_vault_cluster_backend_targets.cluster_name
       backend_cluster_tag_key = global.backend_tag_key
-      consul_license          = (matrix.backend == "consul" && var.backend_edition == "ent") ? step.read_backend_license.license : null
+      consul_license          = (matrix.backend == "consul" && matrix.consul_edition == "ent") ? step.read_backend_license.license : null
       cluster_name            = step.create_vault_cluster_targets.cluster_name
       consul_release = matrix.backend == "consul" ? {
-        edition = var.backend_edition
+        edition = matrix.consul_edition
         version = matrix.consul_version
       } : null
       enable_audit_devices = var.vault_enable_audit_devices

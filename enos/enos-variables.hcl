@@ -45,12 +45,6 @@ variable "aws_ssh_private_key_path" {
   default     = "./support/private_key.pem"
 }
 
-variable "backend_edition" {
-  description = "The backend release edition if applicable"
-  type        = string
-  default     = "ce" // or "ent"
-}
-
 variable "backend_instance_type" {
   description = "The instance type to use for the Vault backend. Must be arm64/nitro compatible"
   type        = string
