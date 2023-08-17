@@ -5,7 +5,7 @@ scenario "ui" {
   matrix {
     edition = ["ce", "ent"]
     backend = ["consul", "raft"]
-    consul_edition    = ["oss", "ent"]
+    consul_edition    = ["ce", "ent"]
   }
 
   terraform_cli = terraform_cli.default
