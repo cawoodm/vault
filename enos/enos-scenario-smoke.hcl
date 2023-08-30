@@ -44,10 +44,10 @@ scenario "smoke" {
     artifact_path = matrix.artifact_source != "artifactory" ? abspath(var.vault_artifact_path) : null
     distro_version = {
       "amazon_linux" = var.distro_version_amazon_linux
-      "leap" = var.distro_version_leap
-      "rhel"   = var.distro_version_rhel
-      "sles" = var.distro_version_sles
-      "ubuntu" = var.distro_version_ubuntu
+      "leap"         = var.distro_version_leap
+      "rhel"         = var.distro_version_rhel
+      "sles"         = var.distro_version_sles
+      "ubuntu"       = var.distro_version_ubuntu
     }
     enos_provider = {
       amazon_linux = provider.enos.ec2_user
@@ -59,10 +59,10 @@ scenario "smoke" {
     manage_service    = matrix.artifact_type == "bundle"
     vault_install_dir = matrix.artifact_type == "bundle" ? var.vault_install_dir : global.vault_install_dir_packages[matrix.distro]
     vault_install_dir_packages = {
-      amazon_linux = "/bin" // TO DO: verify
-      leap         = "/bin" // TO DO: verify
+      amazon_linux = "/bin"
+      leap         = "/usr/bin"
       rhel         = "/bin"
-      sles         = "/bin" // TO DO: verify
+      sles         = "/bin"
       ubuntu       = "/usr/bin"
     }
   }
