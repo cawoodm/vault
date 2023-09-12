@@ -2,7 +2,6 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: BUSL-1.1
 
-
 set -ex -o pipefail
 
 if [ "$PACKAGES" == "" ]
@@ -30,30 +29,28 @@ function retry {
   return 0
 }
 
+# Wait for cloud-init to finish so it doesn't race with any of our package
+# installations
+cloud-init status --wait
+
 echo "Installing Dependencies: $packages"
-  # If this distro comes with yum or apt, use that to install packages
-  if [ -n "$(command -v yum || command -v apt)" ]; then
-    if [ -f /etc/debian_version ]; then
-      # Do our best to make sure that we don't race with cloud-init. Wait a reasonable time until we
-      # see ec2 in the sources list. Very rarely cloud-init will take longer than we wait. In that case
-      # we'll just install our packages.
-      retry 7 grep ec2 /etc/apt/sources.list || true
 
-      cd /tmp
-      retry 5 sudo apt update
-      retry 5 sudo apt install -y "$${packages[@]}"
-    else
-      cd /tmp
-      retry 7 sudo yum -y install "$${packages[@]}"
-    fi
-  # Otherwise use zypper
-  else
-    if [ -f /etc/debian_version ]; then
-      # Do our best to make sure that we don't race with cloud-init. Wait a reasonable time until we
-      # see ec2 in the sources list. Very rarely cloud-init will take longer than we wait. In that case
-      # we'll just install our packages.
-      retry 7 grep ec2 /etc/apt/sources.list || true
-
-      retry 5 sudo zypper install --no-confirm "$${packages[@]}"
-    fi
-  fi
+# Check which package manager our Linux distro comes with, and use that to
+# install packages.
+if [ -n "$(command -v yum)" ]; then
+  cd /tmp
+  sudo yum -y install "$${packages[@]}"
+elif [ -n "$(command -v apt)" ]; then
+  cd /tmp
+  sudo apt update
+  sudo apt install -y "$${packages[@]}"
+elif [ -n "$(command -v zypper)" ]; then
+  # Note: for SLES 12.5 SP5, some packages are not offered in an official repo.
+  # If the first install step fails, we instead attempt to register with PackageHub,
+  # SUSE's third party package marketplace, and then find and install the package
+  # from there.
+  sudo zypper install --no-confirm "$${packages[@]}" || ( sudo SUSEConnect -p PackageHub/12.5/x86_64 && sudo zypper install --no-confirm "$${packages[@]}")
+else
+  echo "No package manager found."
+  exit 1
+fi
