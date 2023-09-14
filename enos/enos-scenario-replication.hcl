@@ -11,7 +11,7 @@ scenario "replication" {
     artifact_type     = ["bundle", "package"]
     consul_edition    = ["ce", "ent"]
     consul_version    = ["1.12.9", "1.13.9", "1.14.9", "1.15.5", "1.16.1"]
-    distro            = ["ubuntu", "rhel"]
+    distro            = ["ubuntu", "rhel", "amazon_linux", "leap", "sles"]
     edition           = ["ent", "ent.fips1402", "ent.hsm", "ent.hsm.fips1402"]
     primary_backend   = ["raft", "consul"]
     primary_seal      = ["awskms", "shamir"]
@@ -35,15 +35,18 @@ scenario "replication" {
   terraform     = terraform.default
   providers = [
     provider.aws.default,
-    provider.enos.ubuntu,
-    provider.enos.rhel
+    provider.enos.ec2_user,
+    provider.enos.ubuntu
   ]
 
   locals {
     artifact_path = matrix.artifact_source != "artifactory" ? abspath(var.vault_artifact_path) : null
     enos_provider = {
-      rhel   = provider.enos.rhel
-      ubuntu = provider.enos.ubuntu
+      amazon_linux = provider.enos.ec2_user
+      leap         = provider.enos.ec2_user
+      rhel         = provider.enos.ec2_user
+      sles         = provider.enos.ec2_user
+      ubuntu       = provider.enos.ubuntu
     }
     manage_service    = matrix.artifact_type == "bundle"
     vault_install_dir = matrix.artifact_type == "bundle" ? var.vault_install_dir : global.vault_install_dir_packages[matrix.distro]

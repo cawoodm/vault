@@ -29,9 +29,10 @@ function retry {
   return 0
 }
 
-# Wait for cloud-init to finish so it doesn't race with any of our package
-# installations
-cloud-init status --wait
+# Wait for cloud-init to finish so it doesn't race with any of our package installations.
+# Note: Amazon Linux 2 throws Python 2.7 errors when running `cloud-init status` as
+# non-root user (known bug).
+sudo cloud-init status --wait
 
 echo "Installing Dependencies: $packages"
 

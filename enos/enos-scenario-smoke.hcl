@@ -23,9 +23,10 @@ scenario "smoke" {
     exclude {
       arch    = ["arm64"]
       edition = ["ent.fips1402", "ent.hsm", "ent.hsm.fips1402"]
+    }
 
     # non-SAP, non-BYOS SLES AMIs in the versions we use are only offered for amd64
-    # TO DO: add detail here
+    # (see distro_version_* variables in enos-variables.hcl for currently supported versions)
     exclude {
       distro = ["sles"]
       arch   = ["arm64"]
@@ -42,13 +43,6 @@ scenario "smoke" {
 
   locals {
     artifact_path = matrix.artifact_source != "artifactory" ? abspath(var.vault_artifact_path) : null
-    distro_version = {
-      "amazon_linux" = var.distro_version_amazon_linux
-      "leap"         = var.distro_version_leap
-      "rhel"         = var.distro_version_rhel
-      "sles"         = var.distro_version_sles
-      "ubuntu"       = var.distro_version_ubuntu
-    }
     enos_provider = {
       amazon_linux = provider.enos.ec2_user
       leap         = provider.enos.ec2_user

@@ -11,9 +11,12 @@ globals {
     "ent.hsm.fips1402" = ["ui", "enterprise", "cgo", "hsm", "fips", "fips_140_2", "ent.hsm.fips1402"]
   }
   distro_version = {
-    "rhel"   = var.rhel_distro_version
-    "ubuntu" = var.ubuntu_distro_version
-  }
+      "amazon_linux" = var.distro_version_amazon_linux
+      "leap"         = var.distro_version_leap
+      "rhel"         = var.distro_version_rhel
+      "sles"         = var.distro_version_sles
+      "ubuntu"       = var.distro_version_ubuntu
+    }
   packages = ["jq"]
   distro_packages = {
     ubuntu = ["netcat"]
