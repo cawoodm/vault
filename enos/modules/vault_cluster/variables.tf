@@ -150,6 +150,11 @@ variable "manage_service" {
   default     = true
 }
 
+variable "package_manager" {
+  type        = string
+  description = "The package manager that comes with each Linux distro"
+}
+
 variable "packages" {
   type        = list(string)
   description = "A list of packages to install via the target host package manager"

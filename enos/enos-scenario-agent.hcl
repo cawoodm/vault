@@ -8,7 +8,7 @@ scenario "agent" {
     artifact_type   = ["bundle", "package"]
     backend         = ["consul", "raft"]
     consul_version  = ["1.12.9", "1.13.9", "1.14.9", "1.15.5", "1.16.1"]
-    distro          = ["ubuntu", "rhel"]
+    distro          = ["amazon_linux", "leap", "rhel",  "sles", "ubuntu"]
     edition         = ["ce", "ent", "ent.fips1402", "ent.hsm", "ent.hsm.fips1402"]
     seal            = ["awskms", "shamir"]
 
@@ -29,15 +29,18 @@ scenario "agent" {
   terraform     = terraform.default
   providers = [
     provider.aws.default,
-    provider.enos.ubuntu,
-    provider.enos.rhel
+    provider.enos.ec2_user,
+    provider.enos.ubuntu
   ]
 
   locals {
     artifact_path = matrix.artifact_source != "artifactory" ? abspath(var.vault_artifact_path) : null
     enos_provider = {
-      rhel   = provider.enos.rhel
-      ubuntu = provider.enos.ubuntu
+      amazon_linux = provider.enos.ec2_user
+      leap         = provider.enos.ec2_user
+      rhel         = provider.enos.ec2_user
+      sles         = provider.enos.ec2_user
+      ubuntu       = provider.enos.ubuntu
     }
     manage_service    = matrix.artifact_type == "bundle"
     vault_install_dir = matrix.artifact_type == "bundle" ? var.vault_install_dir : global.vault_install_dir_packages[matrix.distro]
@@ -170,6 +173,7 @@ scenario "agent" {
     }
 
     variables {
+<<<<<<< HEAD
       artifactory_release     = matrix.artifact_source == "artifactory" ? step.build_vault.vault_artifactory_release : null
       awskms_unseal_key_arn   = step.create_vpc.kms_key_arn
       backend_cluster_name    = step.create_vault_cluster_backend_targets.cluster_name
@@ -206,6 +210,20 @@ scenario "agent" {
       vault_hosts       = step.create_vault_cluster_targets.hosts
       vault_install_dir = local.vault_install_dir
       vault_root_token  = step.create_vault_cluster.root_token
+=======
+      artifactory_release      = matrix.artifact_source == "artifactory" ? step.build_vault.vault_artifactory_release : null
+      awskms_unseal_key_arn    = step.create_vpc.kms_key_arn
+      cluster_name             = step.create_vault_cluster_targets.cluster_name
+      enable_file_audit_device = var.vault_enable_file_audit_device
+      install_dir              = var.vault_install_dir
+      license                  = matrix.edition != "oss" ? step.read_license.license : null
+      local_artifact_path      = local.artifact_path
+      package_manager          = global.package_manager[matrix.distro]
+      packages                 = global.packages
+      storage_backend          = "raft"
+      target_hosts             = step.create_vault_cluster_targets.hosts
+      unseal_method            = "shamir"
+>>>>>>> b060dcd199 (Updated all scenarios and vault artifactory module for new linux distros)
     }
   }
 

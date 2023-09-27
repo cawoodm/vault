@@ -9,7 +9,7 @@ scenario "smoke" {
     backend         = ["consul", "raft"]
     consul_edition  = ["ce", "ent"]
     consul_version  = ["1.12.9", "1.13.9", "1.14.9", "1.15.5", "1.16.1"]
-    distro          = ["ubuntu", "rhel", "amazon_linux", "leap", "sles"]
+    distro          = ["amazon_linux", "leap", "rhel",  "sles", "ubuntu"]
     edition         = ["ce", "ent", "ent.fips1402", "ent.hsm", "ent.hsm.fips1402"]
     seal            = ["awskms", "shamir"]
 
@@ -52,13 +52,6 @@ scenario "smoke" {
     }
     manage_service    = matrix.artifact_type == "bundle"
     vault_install_dir = matrix.artifact_type == "bundle" ? var.vault_install_dir : global.vault_install_dir_packages[matrix.distro]
-    vault_install_dir_packages = {
-      amazon_linux = "/bin"
-      leap         = "/usr/bin"
-      rhel         = "/bin"
-      sles         = "/bin"
-      ubuntu       = "/usr/bin"
-    }
   }
 
   step "get_local_metadata" {
@@ -203,6 +196,7 @@ scenario "smoke" {
       license              = matrix.edition != "ce" ? step.read_vault_license.license : null
       local_artifact_path  = local.artifact_path
       manage_service       = local.manage_service
+      package_manager      = global.package_manager[matrix.distro]
       packages             = concat(global.packages, global.distro_packages[matrix.distro])
       storage_backend      = matrix.backend
       target_hosts         = step.create_vault_cluster_targets.hosts

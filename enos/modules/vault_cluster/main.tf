@@ -111,6 +111,7 @@ resource "enos_remote_exec" "install_packages" {
 
   environment = {
     PACKAGES = join(" ", var.packages)
+    PACKAGE_MANAGER = var.package_manager
   }
 
   scripts = [abspath("${path.module}/scripts/install-packages.sh")]

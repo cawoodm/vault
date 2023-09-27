@@ -6,12 +6,19 @@ locals {
   // file name extensions for the install packages of vault for the various architectures, distributions and editions
   package_extensions = {
     amd64 = {
-      ubuntu = "-1_amd64.deb"
+      amazon_linux = "-1.x86_64.rpm"
+      leap = "-1.x86_64.rpm"
       rhel   = "-1.x86_64.rpm"
+      sles = "-1_amd64.deb"
+      ubuntu = "-1_amd64.deb"
     }
     arm64 = {
-      ubuntu = "-1_arm64.deb"
-      rhel   = "-1.aarch64.rpm"
+      amazon_linux = "-1.x86_64.rpm"
+      leap = "-1.x86_64.rpm"
+      rhel   = "-1.x86_64.rpm"
+      ubuntu = "-1_amd64.deb"
+      # Note: SLES not included here because the versions/editions of SLES we use
+      # are only offered for amd64
     }
   }
 
@@ -20,12 +27,19 @@ locals {
 
   // file name prefixes for the install packages of vault for the various distributions and artifact types (package or bundle)
   artifact_package_release_names = {
-    ubuntu = {
-      "ce"               = "vault_"
-      "ent"              = "vault-enterprise_",
-      "ent.fips1402"     = "vault-enterprise-fips1402_",
-      "ent.hsm"          = "vault-enterprise-hsm_",
-      "ent.hsm.fips1402" = "vault-enterprise-hsm-fips1402_",
+    amazon_linux = {
+      "oss"              = "vault-"
+      "ent"              = "vault-enterprise-",
+      "ent.fips1402"     = "vault-enterprise-fips1402-",
+      "ent.hsm"          = "vault-enterprise-hsm-",
+      "ent.hsm.fips1402" = "vault-enterprise-hsm-fips1402-",
+    },
+    leap = {
+      "oss"              = "vault-"
+      "ent"              = "vault-enterprise-",
+      "ent.fips1402"     = "vault-enterprise-fips1402-",
+      "ent.hsm"          = "vault-enterprise-hsm-",
+      "ent.hsm.fips1402" = "vault-enterprise-hsm-fips1402-",
     },
     rhel = {
       "ce"               = "vault-"
@@ -33,6 +47,20 @@ locals {
       "ent.fips1402"     = "vault-enterprise-fips1402-",
       "ent.hsm"          = "vault-enterprise-hsm-",
       "ent.hsm.fips1402" = "vault-enterprise-hsm-fips1402-",
+    },
+    sles = {
+      "oss"              = "vault-"
+      "ent"              = "vault-enterprise-",
+      "ent.fips1402"     = "vault-enterprise-fips1402-",
+      "ent.hsm"          = "vault-enterprise-hsm-",
+      "ent.hsm.fips1402" = "vault-enterprise-hsm-fips1402-",
+    }
+    ubuntu = {
+      "oss"              = "vault_"
+      "ent"              = "vault-enterprise_",
+      "ent.fips1402"     = "vault-enterprise-fips1402_",
+      "ent.hsm"          = "vault-enterprise-hsm_",
+      "ent.hsm.fips1402" = "vault-enterprise-hsm-fips1402_",
     }
   }
 

@@ -34,24 +34,23 @@ function retry {
 # non-root user (known bug).
 sudo cloud-init status --wait
 
-echo "Installing Dependencies: $packages"
+echo "Installing Dependencies: $PACKAGES"
 
-# Check which package manager our Linux distro comes with, and use that to
-# install packages.
-if [ -n "$(command -v yum)" ]; then
-  cd /tmp
-  sudo yum -y install "$${packages[@]}"
-elif [ -n "$(command -v apt)" ]; then
+# Use the default package manager of the current Linux distro to install packages
+if [ "$PACKAGE_MANAGER" = "apt" ]; then
   cd /tmp
   sudo apt update
-  sudo apt install -y "$${packages[@]}"
-elif [ -n "$(command -v zypper)" ]; then
+  sudo apt install -y "$${PACKAGES[@]}"
+elif [ "$PACKAGE_MANAGER" = "yum" ]; then
+  cd /tmp
+  sudo yum -y install "$${PACKAGES[@]}"
+elif [ "$PACKAGE_MANAGER" = "zypper" ]; then
   # Note: for SLES 12.5 SP5, some packages are not offered in an official repo.
   # If the first install step fails, we instead attempt to register with PackageHub,
   # SUSE's third party package marketplace, and then find and install the package
   # from there.
-  sudo zypper install --no-confirm "$${packages[@]}" || ( sudo SUSEConnect -p PackageHub/12.5/x86_64 && sudo zypper install --no-confirm "$${packages[@]}")
+  sudo zypper install --no-confirm "$${PACKAGES[@]}" || ( sudo SUSEConnect -p PackageHub/12.5/x86_64 && sudo zypper install --no-confirm "$${PACKAGES[@]}")
 else
-  echo "No package manager found."
+  echo "No matching package manager provided."
   exit 1
 fi

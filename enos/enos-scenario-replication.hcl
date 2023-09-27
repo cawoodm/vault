@@ -11,7 +11,7 @@ scenario "replication" {
     artifact_type     = ["bundle", "package"]
     consul_edition    = ["ce", "ent"]
     consul_version    = ["1.12.9", "1.13.9", "1.14.9", "1.15.5", "1.16.1"]
-    distro            = ["ubuntu", "rhel", "amazon_linux", "leap", "sles"]
+    distro            = ["amazon_linux", "leap", "rhel",  "sles", "ubuntu"]
     edition           = ["ent", "ent.fips1402", "ent.hsm", "ent.hsm.fips1402"]
     primary_backend   = ["raft", "consul"]
     primary_seal      = ["awskms", "shamir"]
@@ -253,6 +253,7 @@ scenario "replication" {
       license              = matrix.edition != "ce" ? step.read_vault_license.license : null
       local_artifact_path  = local.artifact_path
       manage_service       = local.manage_service
+      package_manager          = global.package_manager[matrix.distro]
       packages             = concat(global.packages, global.distro_packages[matrix.distro])
       storage_backend      = matrix.primary_backend
       target_hosts         = step.create_primary_cluster_targets.hosts
@@ -310,6 +311,7 @@ scenario "replication" {
       license              = matrix.edition != "ce" ? step.read_vault_license.license : null
       local_artifact_path  = local.artifact_path
       manage_service       = local.manage_service
+      package_manager          = global.package_manager[matrix.distro]
       packages             = concat(global.packages, global.distro_packages[matrix.distro])
       storage_backend      = matrix.secondary_backend
       target_hosts         = step.create_secondary_cluster_targets.hosts
@@ -599,6 +601,7 @@ scenario "replication" {
       license              = matrix.edition != "ce" ? step.read_vault_license.license : null
       local_artifact_path  = local.artifact_path
       manage_service       = local.manage_service
+      package_manager      = global.package_manager[matrix.distro]
       packages             = concat(global.packages, global.distro_packages[matrix.distro])
       root_token           = step.create_primary_cluster.root_token
       shamir_unseal_keys   = matrix.primary_seal == "shamir" ? step.create_primary_cluster.unseal_keys_hex : null

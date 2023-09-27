@@ -6,7 +6,7 @@ scenario "autopilot" {
     arch            = ["amd64", "arm64"]
     artifact_source = ["local", "crt", "artifactory"]
     artifact_type   = ["bundle", "package"]
-    distro          = ["ubuntu", "rhel"]
+    distro          = ["amazon_linux", "leap", "rhel",  "sles", "ubuntu"]
     edition         = ["ce", "ent", "ent.fips1402", "ent.hsm", "ent.hsm.fips1402"]
     // NOTE: when backporting, make sure that our initial versions are less than that
     // release branch's version.
@@ -30,15 +30,18 @@ scenario "autopilot" {
   terraform     = terraform.default
   providers = [
     provider.aws.default,
-    provider.enos.ubuntu,
-    provider.enos.rhel
+    provider.enos.ec2_user,
+    provider.enos.ubuntu
   ]
 
   locals {
     artifact_path = matrix.artifact_source != "artifactory" ? abspath(var.vault_artifact_path) : null
     enos_provider = {
-      rhel   = provider.enos.rhel
-      ubuntu = provider.enos.ubuntu
+      amazon_linux = provider.enos.ec2_user
+      leap         = provider.enos.ec2_user
+      rhel         = provider.enos.ec2_user
+      sles         = provider.enos.ec2_user
+      ubuntu       = provider.enos.ubuntu
     }
     manage_service    = matrix.artifact_type == "bundle"
     vault_install_dir = matrix.artifact_type == "bundle" ? var.vault_install_dir : global.vault_install_dir_packages[matrix.distro]
@@ -118,6 +121,7 @@ scenario "autopilot" {
       cluster_name          = step.create_vault_cluster_targets.cluster_name
       install_dir           = local.vault_install_dir
       license               = matrix.edition != "ce" ? step.read_license.license : null
+      package_manager       = global.package_manager[matrix.distro]
       packages              = concat(global.packages, global.distro_packages[matrix.distro])
       release = {
         edition = matrix.edition
@@ -222,7 +226,8 @@ scenario "autopilot" {
       license                     = matrix.edition != "ce" ? step.read_license.license : null
       local_artifact_path         = local.artifact_path
       manage_service              = local.manage_service
-      packages                    = concat(global.packages, global.distro_packages[matrix.distro])
+      package_manager             = global.package_manager[matrix.distro]
+      packages                    = global.packages
       root_token                  = step.create_vault_cluster.root_token
       shamir_unseal_keys          = matrix.seal == "shamir" ? step.create_vault_cluster.unseal_keys_hex : null
       storage_backend             = "raft"
