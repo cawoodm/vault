@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BUSL-1.1
 
 globals {
+  backend_license_path = var.backend_license_path
   backend_tag_key = "VaultStorage"
   build_tags = {
     "ce"               = ["ui"]

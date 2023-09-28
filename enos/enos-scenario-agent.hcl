@@ -7,6 +7,7 @@ scenario "agent" {
     artifact_source = ["local", "crt", "artifactory"]
     artifact_type   = ["bundle", "package"]
     backend         = ["consul", "raft"]
+    consul_edition  = ["ce", "ent"]
     consul_version  = ["1.12.9", "1.13.9", "1.14.9", "1.15.5", "1.16.1"]
     distro          = ["amazon_linux", "leap", "rhel",  "sles", "ubuntu"]
     edition         = ["ce", "ent", "ent.fips1402", "ent.hsm", "ent.hsm.fips1402"]
@@ -87,7 +88,7 @@ scenario "agent" {
   // This step reads the contents of the backend license if we're using a Consul backend and
   // the edition is "ent".
   step "read_backend_license" {
-    skip_step = matrix.backend == "raft" || var.backend_edition == "ce"
+    skip_step = matrix.backend == "raft" || matrix.consul_edition == "ce"
     module    = module.read_license
 
     variables {
@@ -151,9 +152,9 @@ scenario "agent" {
     variables {
       cluster_name    = step.create_vault_cluster_backend_targets.cluster_name
       cluster_tag_key = global.backend_tag_key
-      license         = (matrix.backend == "consul" && var.backend_edition == "ent") ? step.read_backend_license.license : null
+      license         = (matrix.backend == "consul" && matrix.consul_edition == "ent") ? step.read_backend_license.license : null
       release = {
-        edition = var.backend_edition
+        edition = matrix.consul_edition
         version = matrix.consul_version
       }
       target_hosts = step.create_vault_cluster_backend_targets.hosts
@@ -173,15 +174,14 @@ scenario "agent" {
     }
 
     variables {
-<<<<<<< HEAD
       artifactory_release     = matrix.artifact_source == "artifactory" ? step.build_vault.vault_artifactory_release : null
       awskms_unseal_key_arn   = step.create_vpc.kms_key_arn
       backend_cluster_name    = step.create_vault_cluster_backend_targets.cluster_name
       backend_cluster_tag_key = global.backend_tag_key
       cluster_name            = step.create_vault_cluster_targets.cluster_name
-      consul_license          = (matrix.backend == "consul" && var.backend_edition == "ent") ? step.read_backend_license.license : null
+      consul_license          = (matrix.backend == "consul" && matrix.consul_edition == "ent") ? step.read_backend_license.license : null
       consul_release = matrix.backend == "consul" ? {
-        edition = var.backend_edition
+        edition = matrix.consul_edition
         version = matrix.consul_version
       } : null
       enable_audit_devices = var.vault_enable_audit_devices
@@ -189,6 +189,7 @@ scenario "agent" {
       license              = matrix.edition != "ce" ? step.read_vault_license.license : null
       local_artifact_path  = local.artifact_path
       manage_service       = local.manage_service
+      package_manager      = global.package_manager[matrix.distro]
       packages             = concat(global.packages, global.distro_packages[matrix.distro])
       storage_backend      = matrix.backend
       target_hosts         = step.create_vault_cluster_targets.hosts
@@ -210,20 +211,6 @@ scenario "agent" {
       vault_hosts       = step.create_vault_cluster_targets.hosts
       vault_install_dir = local.vault_install_dir
       vault_root_token  = step.create_vault_cluster.root_token
-=======
-      artifactory_release      = matrix.artifact_source == "artifactory" ? step.build_vault.vault_artifactory_release : null
-      awskms_unseal_key_arn    = step.create_vpc.kms_key_arn
-      cluster_name             = step.create_vault_cluster_targets.cluster_name
-      enable_file_audit_device = var.vault_enable_file_audit_device
-      install_dir              = var.vault_install_dir
-      license                  = matrix.edition != "oss" ? step.read_license.license : null
-      local_artifact_path      = local.artifact_path
-      package_manager          = global.package_manager[matrix.distro]
-      packages                 = global.packages
-      storage_backend          = "raft"
-      target_hosts             = step.create_vault_cluster_targets.hosts
-      unseal_method            = "shamir"
->>>>>>> b060dcd199 (Updated all scenarios and vault artifactory module for new linux distros)
     }
   }
 
