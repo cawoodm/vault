@@ -137,7 +137,7 @@ require (
 	github.com/hashicorp/vault-plugin-auth-kubernetes v0.17.1
 	github.com/hashicorp/vault-plugin-auth-oci v0.14.2
 	github.com/hashicorp/vault-plugin-database-couchbase v0.9.4
-	github.com/hashicorp/vault-plugin-database-elasticsearch v0.13.3
+	github.com/hashicorp/vault-plugin-database-elasticsearch v0.13.4-0.20231001000311-a9f4b7c07cab
 	github.com/hashicorp/vault-plugin-database-mongodbatlas v0.10.1
 	github.com/hashicorp/vault-plugin-database-redis v0.2.2
 	github.com/hashicorp/vault-plugin-database-redis-elasticache v0.2.3
