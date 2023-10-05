@@ -15,6 +15,7 @@ import (
 	"sync"
 	"time"
 
+	hcpengine "github.com/hashicorp/hcp-vault-engine-poc"
 	"github.com/hashicorp/vault/api"
 	"github.com/hashicorp/vault/command/token"
 	"github.com/hashicorp/vault/helper/namespace"
@@ -121,6 +122,11 @@ func (c *BaseCommand) Client() (*api.Client, error) {
 
 	// Build the client
 	client, err := api.NewClient(config)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create client")
+	}
+
+	err = hcpengine.ConfigureHCPProxy(c.UI, client)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create client")
 	}

@@ -10,7 +10,9 @@ module github.com/hashicorp/vault
 // semantic related to Go module handling), this comment should be updated to explain that.
 //
 // Whenever this value gets updated, sdk/go.mod should be updated to the same value.
-go 1.20
+go 1.21
+
+toolchain go1.21.0
 
 replace github.com/hashicorp/vault/api => ./api
 
@@ -42,7 +44,7 @@ require (
 	github.com/apple/foundationdb/bindings/go v0.0.0-20190411004307-cd5c9d91fad2
 	github.com/armon/go-metrics v0.4.1
 	github.com/armon/go-radix v1.0.0
-	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef
+	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/aws/aws-sdk-go v1.44.331
 	github.com/aws/aws-sdk-go-v2/config v1.18.19
 	github.com/axiomhq/hyperloglog v0.0.0-20220105174342-98591331716a
@@ -112,7 +114,7 @@ require (
 	github.com/hashicorp/go-secure-stdlib/reloadutil v0.1.1
 	github.com/hashicorp/go-secure-stdlib/strutil v0.1.2
 	github.com/hashicorp/go-secure-stdlib/tlsutil v0.1.2
-	github.com/hashicorp/go-sockaddr v1.0.4
+	github.com/hashicorp/go-sockaddr v1.0.5
 	github.com/hashicorp/go-syslog v1.0.0
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/hashicorp/go-version v1.6.0
@@ -121,7 +123,8 @@ require (
 	github.com/hashicorp/hcl/v2 v2.16.2
 	github.com/hashicorp/hcp-link v0.1.0
 	github.com/hashicorp/hcp-scada-provider v0.2.1
-	github.com/hashicorp/hcp-sdk-go v0.23.0
+	github.com/hashicorp/hcp-sdk-go v0.65.0
+	github.com/hashicorp/hcp-vault-engine-poc v0.0.0-20231009130114-1b0ef7e229a0
 	github.com/hashicorp/nomad/api v0.0.0-20230519153805-2275a83cbfdf
 	github.com/hashicorp/raft v1.3.10
 	github.com/hashicorp/raft-autopilot v0.2.0
@@ -154,7 +157,7 @@ require (
 	github.com/hashicorp/vault-plugin-secrets-openldap v0.11.2
 	github.com/hashicorp/vault-plugin-secrets-terraform v0.7.3
 	github.com/hashicorp/vault-testing-stepwise v0.1.4
-	github.com/hashicorp/vault/api v1.10.0
+	github.com/hashicorp/vault/api v1.10.1-0.20231006231010-61f8aff24b4d
 	github.com/hashicorp/vault/api/auth/approle v0.1.0
 	github.com/hashicorp/vault/api/auth/userpass v0.1.0
 	github.com/hashicorp/vault/sdk v0.10.0
@@ -207,18 +210,18 @@ require (
 	go.etcd.io/etcd/client/v3 v3.5.7
 	go.mongodb.org/atlas v0.33.0
 	go.mongodb.org/mongo-driver v1.12.1
-	go.opentelemetry.io/otel v1.16.0
+	go.opentelemetry.io/otel v1.19.0
 	go.opentelemetry.io/otel/sdk v1.14.0
-	go.opentelemetry.io/otel/trace v1.16.0
+	go.opentelemetry.io/otel/trace v1.19.0
 	go.uber.org/atomic v1.11.0
 	go.uber.org/goleak v1.2.1
-	golang.org/x/crypto v0.13.0
+	golang.org/x/crypto v0.14.0
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
-	golang.org/x/net v0.15.0
-	golang.org/x/oauth2 v0.11.0
+	golang.org/x/net v0.16.0
+	golang.org/x/oauth2 v0.13.0
 	golang.org/x/sync v0.3.0
-	golang.org/x/sys v0.12.0
-	golang.org/x/term v0.12.0
+	golang.org/x/sys v0.13.0
+	golang.org/x/term v0.13.0
 	golang.org/x/text v0.13.0
 	golang.org/x/tools v0.9.1
 	google.golang.org/api v0.138.0
@@ -348,16 +351,16 @@ require (
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
-	github.com/go-openapi/analysis v0.20.0 // indirect
-	github.com/go-openapi/errors v0.20.1 // indirect
-	github.com/go-openapi/jsonpointer v0.19.6 // indirect
+	github.com/go-openapi/analysis v0.21.4 // indirect
+	github.com/go-openapi/errors v0.20.4 // indirect
+	github.com/go-openapi/jsonpointer v0.20.0 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
-	github.com/go-openapi/loads v0.20.2 // indirect
-	github.com/go-openapi/runtime v0.19.24 // indirect
-	github.com/go-openapi/spec v0.20.3 // indirect
-	github.com/go-openapi/strfmt v0.20.0 // indirect
-	github.com/go-openapi/swag v0.22.3 // indirect
-	github.com/go-openapi/validate v0.20.2 // indirect
+	github.com/go-openapi/loads v0.21.2 // indirect
+	github.com/go-openapi/runtime v0.26.0 // indirect
+	github.com/go-openapi/spec v0.20.9 // indirect
+	github.com/go-openapi/strfmt v0.21.7 // indirect
+	github.com/go-openapi/swag v0.22.4 // indirect
+	github.com/go-openapi/validate v0.22.1 // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible // indirect
 	github.com/goccy/go-json v0.10.0 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
@@ -398,7 +401,7 @@ require (
 	github.com/hashicorp/vic v1.5.1-0.20190403131502-bbfe86ec9443 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect
-	github.com/imdario/mergo v0.3.15 // indirect
+	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.14.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -456,6 +459,7 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/nicolai86/scaleway-sdk v1.10.2-0.20180628010248-798f60e20bb2 // indirect
 	github.com/nwaples/rardecode v1.1.2 // indirect
+	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc2.0.20221005185240-3a7f492d3f1b // indirect
 	github.com/opencontainers/runc v1.1.6 // indirect
@@ -508,14 +512,14 @@ require (
 	github.com/zeebo/xxh3 v1.0.2 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.7 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	go.opentelemetry.io/otel/metric v1.16.0 // indirect
+	go.opentelemetry.io/otel/metric v1.19.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.19.1 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20221208152030-732eee02a75a // indirect
 	golang.org/x/mod v0.12.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
+	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto v0.0.0-20230822172742-b8732ec3820d // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230803162519-f966b187b2e5 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230807174057-1744710a1577 // indirect

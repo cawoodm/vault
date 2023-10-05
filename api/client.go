@@ -22,6 +22,8 @@ import (
 	"time"
 	"unicode"
 
+	"golang.org/x/oauth2"
+
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/go-retryablehttp"
@@ -589,6 +591,7 @@ type Client struct {
 	requestCallbacks      []RequestCallback
 	responseCallbacks     []ResponseCallback
 	replicationStateStore *replicationStateStore
+	hcpToken              *oauth2.Token
 }
 
 // NewClient returns a new client for the given configuration.
@@ -1025,6 +1028,14 @@ func (c *Client) SetToken(v string) {
 	c.token = v
 }
 
+// SetHCPToken sets the hcp token directly. This won't perform any auth
+// verification, it simply sets the token properly for future requests.
+func (c *Client) SetHCPToken(v *oauth2.Token) {
+	c.modifyLock.Lock()
+	defer c.modifyLock.Unlock()
+	c.hcpToken = v
+}
+
 // ClearToken deletes the token if it is set or does nothing otherwise.
 func (c *Client) ClearToken() {
 	c.modifyLock.Lock()
@@ -1297,6 +1308,14 @@ func (c *Client) NewRequest(method, requestPath string) *Request {
 		Host:        addr.Host,
 		ClientToken: token,
 		Params:      make(map[string][]string),
+	}
+
+	if c.hcpToken.Valid() {
+		req.HCPCookie = http.Cookie{
+			Name:    "hcp_access_token",
+			Value:   c.hcpToken.AccessToken,
+			Expires: c.hcpToken.Expiry,
+		}
 	}
 
 	var lookupPath string

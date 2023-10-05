@@ -71,6 +71,8 @@ import (
 	sr "github.com/hashicorp/vault/serviceregistration"
 	csr "github.com/hashicorp/vault/serviceregistration/consul"
 	ksr "github.com/hashicorp/vault/serviceregistration/kubernetes"
+
+	hcpengine "github.com/hashicorp/hcp-vault-engine-poc"
 )
 
 const (
@@ -906,8 +908,16 @@ func initCommands(ui, serverCmdUi cli.Ui, runOpts *RunOptions) map[string]cli.Co
 		},
 	}
 
+	initHCPCommands(ui, commands)
+
 	initCommandsEnt(ui, serverCmdUi, runOpts, commands)
 	return commands
+}
+
+func initHCPCommands(ui cli.Ui, commands map[string]cli.CommandFactory) {
+	for cmd, cmdFactory := range hcpengine.InitHCPCommand(ui) {
+		commands[cmd] = cmdFactory
+	}
 }
 
 // MakeShutdownCh returns a channel that can be used for shutdown
