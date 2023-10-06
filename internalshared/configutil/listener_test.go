@@ -1058,6 +1058,9 @@ func TestListener_parseRedactionSettings(t *testing.T) {
 				require.Nil(t, l.RedactVersionRaw)
 			}
 		})
+	}
+}
+
 func TestParseAndClearBool(t *testing.T) {
 	testcases := []struct {
 		name           string
